@@ -16,7 +16,7 @@ from netmiko import Netmiko
 # Configuration Section
 # -------------------------------------------------------------------
 # Set this to your network ID in PeeringDB
-OUR_NETWORK_IDS = ["9115"]  # Replace with your actual network ID!!!!
+OUR_NETWORK_IDS = ["12345"]  # Replace with your actual network ID!!!!
 # Number of backup configs to keep before rotating out old ones
 NUMBER_OF_BACKUPS = 5
 # Directory to store backup configs before config deployment
