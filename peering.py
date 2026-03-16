@@ -57,7 +57,7 @@ def setup_logging(verbose, debug):
     elif verbose: level = logging.INFO
     logging.basicConfig(format=LOG_FORMAT, stream=sys.stderr, level=level)
 
-# Fetch our ASN from PeeringDB using the provided network ID(s). This is used in the templates and for validation.
+# Fetch our ASN from PeeringDB using the provided network id. This is used in the templates and for validation.
 def fetch_our_asn():
     try:
         url = f"{API}/net/{OUR_NETWORK_IDS[0]}"
@@ -106,7 +106,7 @@ def get_asn_data(peer_asn, networks):
         logging.critical(f"Error fetching Peer data: {e}")
         sys.exit(1)
 
-# Fetch prefixes advertised by the IXes we peer at
+# Fetch prefixes advertised by the IX's we peer at
 def fetch_prefixes(networks):
     prefixes = {}
     for ix_id in networks.keys():
@@ -186,7 +186,7 @@ def render_template(peers, device, net_name, max_v4, max_v6):
     SEQUENCE = ["PRIMARY", "SECONDARY", "TERTIARY", "QUATERNARY", "QUINARY"]
     config = ""
     
-    # Log for debugging/visibility
+    # Log for debugging
     logging.info(f"PeeringDB Limits for {net_name}: IPv4={max_v4}, IPv6={max_v6}")
 
     for i, peer in enumerate(peers):
@@ -207,6 +207,7 @@ def render_template(peers, device, net_name, max_v4, max_v6):
         config += template.render(data) + "\n"
     return config
 
+# Housekeeping, remove old backups and keep only NUMBER_OF_BACKUPS variable
 def cleanup_old_backups(hostname):
     pattern = f"{hostname}_"
     try:
@@ -225,7 +226,7 @@ def cleanup_old_backups(hostname):
     except Exception as e:
         logging.warning(f"Failed to cleanup backups for {hostname}: {e}")
 
-# Connect to the router via SSH, backup the current config, check for existing peer IPs or ASNs to prevent overwriting, push the new config, and verify BGP status post-deployment.
+# Connect to the router via SSH, backup the current config, check for existing peer IPs or ASNs to prevent overwriting, push the new config, and verify BGP status after config.
 def exec_ssh(router, username, commands, password, peer_asn, peers):
     try:
         conn = Netmiko(
@@ -255,11 +256,6 @@ def exec_ssh(router, username, commands, password, peer_asn, peers):
                 print(f"\n!!! WARNING: Peer IP {ip} already exists on device {router['hostname']} !!!")
                 existing_conflict = True
         
-        # Look for the ASN specifically in a neighbor context to prevent false positives with local ASN
-        if f"as {peer_asn}" in running_config.lower():
-            print(f"!!! WARNING: Remote-AS {peer_asn} detected in config on {router['hostname']} !!!")
-            existing_conflict = True
-
         if existing_conflict:
             print("!!! Exiting to prevent configuration overwrite. !!!")
             conn.disconnect()
