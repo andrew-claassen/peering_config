@@ -1,0 +1,33 @@
+router bgp {{ our_asn }}
+{% if peer_ipv4 %}
+ neighbor-group {{ ix_name|lower }}-v4
+  address-family ipv4 unicast
+   route-policy PASS-ALL in
+   route-policy PASS-ALL out
+  !
+ !
+ neighbor {{ peer_ipv4 }}
+  use neighbor-group {{ ix_name|lower }}-v4
+  remote-as {{ peer_asn }}
+  description PEER:{{ peer_name }}:{{ peer_primary }}
+  address-family ipv4 unicast
+   maximum-prefix {{ max_prefix_v4 }} 80
+  !
+ !
+{% endif %}
+{% if peer_ipv6 %}
+ neighbor-group {{ ix_name|lower }}-v6
+  address-family ipv6 unicast
+   route-policy PASS-ALL in
+   route-policy PASS-ALL out
+  !
+ !
+ neighbor {{ peer_ipv6 }}
+  use neighbor-group {{ ix_name|lower }}-v6
+  remote-as {{ peer_asn }}
+  description PEER:{{ peer_name }}:{{ peer_primary }}
+  address-family ipv6 unicast
+   maximum-prefix {{ max_prefix_v6 }} 80
+  !
+ !
+{% endif %}

@@ -1,0 +1,24 @@
+router bgp {{ our_asn }}
+{% if peer_ipv4 %}
+ neighbor {{ ix_name|lower }}-v4 peer-group
+ neighbor {{ ix_name|lower }}-v4 route-map PASS-ALL in
+ neighbor {{ ix_name|lower }}-v4 route-map PASS-ALL out
+ neighbor {{ peer_ipv4 }} peer-group {{ ix_name|lower }}-v4
+ neighbor {{ peer_ipv4 }} remote-as {{ peer_asn }}
+ neighbor {{ peer_ipv4 }} description PEER:{{ peer_name }}:{{ peer_primary }}
+ address-family ipv4
+  neighbor {{ peer_ipv4 }} activate
+  neighbor {{ peer_ipv4 }} maximum-prefix {{ max_prefix_v4 }}
+{% endif %}
+{% if peer_ipv6 %}
+ neighbor {{ ix_name|lower }}-v6 peer-group
+ neighbor {{ ix_name|lower }}-v6 route-map PASS-ALL in
+ neighbor {{ ix_name|lower }}-v6 route-map PASS-ALL out
+ neighbor {{ peer_ipv6 }} peer-group {{ ix_name|lower }}-v6
+ neighbor {{ peer_ipv6 }} remote-as {{ peer_asn }}
+ neighbor {{ peer_ipv6 }} description PEER:{{ peer_name }}:{{ peer_primary }}
+ address-family ipv6
+  neighbor {{ peer_ipv6 }} activate
+  neighbor {{ peer_ipv6 }} maximum-prefix {{ max_prefix_v6 }}
+{% endif %}
+!

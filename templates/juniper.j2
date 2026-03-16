@@ -1,0 +1,16 @@
+{% if peer_ipv4 %}
+set protocols bgp group {{ ix_name|lower }}-v4 neighbor {{ peer_ipv4 }} peer-as {{ peer_asn }}
+set protocols bgp group {{ ix_name|lower }}-v4 neighbor {{ peer_ipv4 }} description "PEER:{{ peer_name }}:{{ peer_primary }}"
+set protocols bgp group {{ ix_name|lower }}-v4 neighbor {{ peer_ipv4 }} family inet unicast prefix-limit maximum {{ max_prefix_v4 }}
+set protocols bgp group {{ ix_name|lower }}-v4 neighbor {{ peer_ipv4 }} family inet unicast prefix-limit teardown 80
+set protocols bgp group {{ ix_name|lower }}-v4 neighbor {{ peer_ipv4 }} import PASS-ALL
+set protocols bgp group {{ ix_name|lower }}-v4 neighbor {{ peer_ipv4 }} export PASS-ALL
+{% endif %}
+{% if peer_ipv6 %}
+set protocols bgp group {{ ix_name|lower }}-v6 neighbor {{ peer_ipv6 }} peer-as {{ peer_asn }}
+set protocols bgp group {{ ix_name|lower }}-v6 neighbor {{ peer_ipv6 }} description "PEER:{{ peer_name }}:{{ peer_primary }}"
+set protocols bgp group {{ ix_name|lower }}-v6 neighbor {{ peer_ipv6 }} family inet6 unicast prefix-limit maximum {{ max_prefix_v6 }}
+set protocols bgp group {{ ix_name|lower }}-v6 neighbor {{ peer_ipv6 }} family inet6 unicast prefix-limit teardown 80
+set protocols bgp group {{ ix_name|lower }}-v6 neighbor {{ peer_ipv6 }} import PASS-ALL
+set protocols bgp group {{ ix_name|lower }}-v6 neighbor {{ peer_ipv6 }} export PASS-ALL
+{% endif %}
