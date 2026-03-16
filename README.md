@@ -58,25 +58,30 @@ eg. ZANOG ASN is 37262, the URL is https://www.peeringdb.com/net/17650 so the ne
 
 NB! don't use this network ID you MUST find your own network ID!
 
-2. Ok now run python3 get_ixp_info.py
+2. Ok now run ```python3 get_ixp_info.py```
 
 This will create a file called ixp.cfg with the following example information:
 
+```
 Name: SOME_NETWORK_NAME
 Prefixes v4: 1
 Prefixes v6: 1
 IX ID: 1, Name: SOMEIXP, IPv4: 192.0.1.111, IPv6: 2001:xxxx:aaaa:1:111
+```
 
 This is the information we need to configure our routers for peering.
 
-3. Edit peering.py and set your network ID in the OUR_NETWORK_IDS = ['1234'] variable.
+3. Edit peering.py and set your network ID in the ```OUR_NETWORK_IDS = ['1234']``` variable.
 
 4. Edit routers.cfg and add your router's hostname/ip addresses and the device type, also name your exchange points to what you prefer, this is the text that will be used to render the templates.
 
 5. Now edit the templates in the templates folder to suit your needs, the ones here are just examples. These are Jinja2 templates and you can use any of the variables that are passed to the template.
 
 6. Now run python3 peering.py ASN
-eg. python3 peering.py 1234
+
+```python3 peering.py 1234```
+
+# Usage
 
 ```
 usage: peering.py [-h] [-v] [-f] [-n] [-u USERNAME] ASN
