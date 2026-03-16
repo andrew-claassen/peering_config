@@ -1,0 +1,4 @@
+netmiko
+requests
+python-dotenv
+jinja2
