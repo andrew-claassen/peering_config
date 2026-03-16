@@ -23,14 +23,14 @@ NUMBER_OF_BACKUPS = 5
 BACKUP_DIR = "backups"
 
 BACKUP_COMMANDS = {
-    "juniper": "show configuration | display set",
+    "juniper_junos": "show configuration | display set",
     "cisco_xr": "show running-config",
     "cisco_xe": "show running-config",
     "arista_eos": "show running-config",
 }
 
 VERIFY_COMMANDS = {
-    "juniper": ["show bgp summary | match {asn}"],
+    "juniper_junos": ["show bgp summary | match {asn}"],
     "cisco_xr": ["show bgp sessions | i {asn}"],
     "cisco_xe": ["show bgp all summary | i {asn}"],
     "arista_eos": [
@@ -265,7 +265,7 @@ def exec_ssh(router, username, commands, password, peer_asn, peers):
         config_list = [c.strip() for c in commands.split("\n") if c.strip()]
         if config_list:
             conn.send_config_set(config_list)
-            if router["device_type"] == "juniper":
+            if router["device_type"] == "juniper_junos":
                 conn.send_command("commit")
             else:
                 conn.save_config()
