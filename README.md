@@ -42,7 +42,7 @@ Clone the repository:
 
 ```
 git clone https://github.com/andrew-claassen/peering_config.git
-cd peering_prov
+cd peering_config
 ```
 
 Install the Python dependencies:
