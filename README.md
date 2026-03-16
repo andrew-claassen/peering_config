@@ -21,6 +21,7 @@ Given an ASN, the script will:
 
 The script is designed so that the generated configuration is always visible before anything is deployed.
 
+---
 
 ## Supported platforms
 
@@ -33,7 +34,7 @@ The script currently includes template support for:
 
 Additional platforms can be added easily by creating a new template and adding the platform to the `BACKUP_COMMANDS` and `VERIFY_COMMANDS` dictionaries.
 
-
+---
 
 ## Installation
 
@@ -81,7 +82,9 @@ This is the information we need to configure our routers for peering.
 
 ```python3 peering.py 1234```
 
-# Usage
+---
+
+## Optional Arguments
 
 ```
 usage: peering.py [-h] [-v] [-f] [-n] [-u USERNAME] ASN
@@ -96,6 +99,8 @@ options:
   -n, --noop
   -u USERNAME, --username USERNAME
 ```
+
+---
 
 ## Supported platforms
 
