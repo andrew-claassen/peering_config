@@ -16,7 +16,7 @@ from netmiko import Netmiko
 # Configuration Section
 # -------------------------------------------------------------------
 # Set this to your network ID in PeeringDB
-OUR_NETWORK_IDS = ["12345"]  # Replace with your actual network ID!!!!
+OUR_NETWORK_IDS = ["9115"]  # Replace with your actual network ID!!!!
 # Number of backup configs to keep before rotating out old ones
 NUMBER_OF_BACKUPS = 5
 # Directory to store backup configs before config deployment
@@ -207,6 +207,24 @@ def render_template(peers, device, net_name, max_v4, max_v6):
         config += template.render(data) + "\n"
     return config
 
+def cleanup_old_backups(hostname):
+    pattern = f"{hostname}_"
+    try:
+        backup_files = []
+        for name in os.listdir(BACKUP_DIR):
+            if not (name.startswith(pattern) and name.endswith(".cfg")):
+                continue
+            path = os.path.join(BACKUP_DIR, name)
+            if os.path.isfile(path):
+                backup_files.append(path)
+
+        backup_files.sort(key=os.path.getmtime, reverse=True)
+        for old_backup in backup_files[NUMBER_OF_BACKUPS:]:
+            os.remove(old_backup)
+            logging.info(f"Removed old backup: {old_backup}")
+    except Exception as e:
+        logging.warning(f"Failed to cleanup backups for {hostname}: {e}")
+
 # Connect to the router via SSH, backup the current config, check for existing peer IPs or ASNs to prevent overwriting, push the new config, and verify BGP status post-deployment.
 def exec_ssh(router, username, commands, password, peer_asn, peers):
     try:
@@ -225,6 +243,7 @@ def exec_ssh(router, username, commands, password, peer_asn, peers):
         with open(bak_path, "w") as f:
             f.write(running_config)
         print(f"Configuration backed up to: {bak_path}")
+        cleanup_old_backups(router["hostname"])
 
         # 2. Check for existing peer IPs in config to prevent overwriting
         existing_conflict = False
